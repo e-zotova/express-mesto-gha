@@ -1,0 +1,38 @@
+{
+  "name": "mesto-backend",
+  "version": "1.0.0",
+  "description": "Проектная работа о местах России по итогам изучения первой части модуля \"Основы бэкенда для фронтенд-разработчиков\" профессии \"Веб-разработчик\" в Яндекс.Практикуме.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "lint": "npx eslint .",
+    "deploy": "gh-pages -d dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/e-zotova/mesto-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/e-zotova/mesto-backend/issues"
+  },
+  "homepage": "https://github.com/e-zotova/mesto-backend#readme",
+  "devDependencies": {
+    "@babel/core": "^7.20.12",
+    "@babel/preset-env": "^7.20.2",
+    "autoprefixer": "^10.4.13",
+    "babel-loader": "^9.1.2",
+    "eslint": "^8.39.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "gh-pages": "^5.0.0",
+    "nodemon": "^2.0.22"
+  },
+  "dependencies": {
+    "core-js": "^3.27.2",
+    "express": "^4.18.2"
+  },
+  "keywords": []
+}
