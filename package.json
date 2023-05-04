@@ -1,29 +1,27 @@
 {
-  "name": "mesto-backend",
+  "name": "express-mesto-gha",
   "version": "1.0.0",
-  "description": "Проектная работа о местах России по итогам изучения первой части модуля \"Основы бэкенда для фронтенд-разработчиков\" профессии \"Веб-разработчик\" в Яндекс.Практикуме.",
+  "description": "Модуль \"Основы бэкенда для фронтенд-разработчиков\" профессии \"Веб-разработчик\" в Яндекс.Практикуме.",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "lint": "npx eslint .",
-    "deploy": "gh-pages -d dist"
+    "lint": "npx eslint ."
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/e-zotova/mesto-backend.git"
+    "url": "git+https://github.com/e-zotova/express-mesto-gha.git"
   },
   "author": "Elena Zotova",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/e-zotova/mesto-backend/issues"
+    "url": "https://github.com/e-zotova/express-mesto-gha/issues"
   },
-  "homepage": "https://github.com/e-zotova/mesto-backend#readme",
+  "homepage": "https://github.com/e-zotova/express-mesto-gha#readme",
   "devDependencies": {
     "eslint": "^8.39.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.27.5",
-    "gh-pages": "^5.0.0",
     "nodemon": "^2.0.22"
   },
   "dependencies": {
