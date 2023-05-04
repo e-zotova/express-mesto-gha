@@ -23,8 +23,7 @@ const getUserById = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  const data = req.body;
-  console.log(data);
+  const data  = req.body;
 
   User.create(data)
     .then((user) => {

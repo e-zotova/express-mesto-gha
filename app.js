@@ -8,15 +8,15 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.listen(PORT, () => console.log('Сервер запущен.'));
 
-app.use(router);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(router);
+
 app.use((req, res, next) => {
   req.user = {
-    _id: '6453dfcb90dc5087cd3d6c7c'
+    _id: '64540889914069af10c793d7'
   };
 
   next();
 });
-
