@@ -32,8 +32,18 @@ const createUser = (req, res) => {
     .catch(() => res.status(500).send({ message: "Server error" }));
 };
 
+const updateUserInfo = () => User.findByIdAndUpdate(
+
+)
+
+const updateUserAvatar = () => User.findByIdAndUpdate(
+
+)
+
 module.exports = {
   getUsers,
   getUserById,
-  createUser
+  createUser,
+  updateUserInfo,
+  updateUserAvatar
 };
