@@ -4,7 +4,7 @@ const router = require('./routes');
 const mongoose = require('mongoose');
 
 const app = express();
-mongoose.connect('mongodb://localhost:27017/mestodb');
+mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
 app.listen(PORT, () => console.log('Сервер запущен.'));
 
@@ -15,7 +15,7 @@ app.use(router);
 
 app.use((req, res, next) => {
   req.user = {
-    _id: '64540889914069af10c793d7'
+    _id: '6455017f7f2b12b403f90c6d'
   };
 
   next();
