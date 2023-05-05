@@ -7,12 +7,10 @@ const getUsers = (req, res) => {
 };
 
 const getUserById = (req, res) => {
-  const { id } = req.params;
+  const id = req.params.userId;
 
   User.findById(id)
-    .then((users) => {
-      const user = users.find((item) => item._id === id);
-
+    .then((user) => {
       if (!user) {
         return res.status(404).send({ message: "User is not found" });
       } else {
