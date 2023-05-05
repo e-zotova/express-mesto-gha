@@ -8,11 +8,9 @@ const getCards = (req, res) => {
 };
 
 const createCard = (req, res) => {
-  console.log(req.user._id);
+  req.body.owner = req.user._id;
 
-  const {name, like}  = req.body;
-
-  Card.create({name, like})
+  Card.create(req.body)
     .then((card) => {
       res.status(201).send(card);
     })
@@ -45,7 +43,7 @@ const dislikeCard = (req) => Card.findByIdAndUpdate(
   req.params.cardId,
   { $pull: { likes: req.user._id } },
   { new: true },
-) 
+)
 
 module.exports = {
   getCards,

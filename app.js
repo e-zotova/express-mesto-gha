@@ -11,8 +11,6 @@ app.listen(PORT, () => console.log('Сервер запущен.'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(router);
-
 app.use((req, res, next) => {
   req.user = {
     _id: '6455017f7f2b12b403f90c6d'
@@ -20,3 +18,5 @@ app.use((req, res, next) => {
 
   next();
 });
+
+app.use(router);
