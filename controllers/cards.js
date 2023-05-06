@@ -18,14 +18,12 @@ const createCard = (req, res) => {
 };
 
 const deleteCardById = (req, res) => {
-  const { id } = req.params;
+  const cardId = req.params.cardId;
 
-  Card.findById(id)
-    .then((cards) => {
-      const card = cards.find((item) => item._id === id);
-
+  Card.findByIdAndRemove(cardId)
+    .then((card) => {
       if (!card) {
-        return res.status(404).send({ message: "User is not found" });
+        return res.status(404).send({ message: "Card is not found" });
       } else {
         res.send(card);
       }

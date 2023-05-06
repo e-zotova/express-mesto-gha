@@ -7,9 +7,9 @@ const getUsers = (req, res) => {
 };
 
 const getUserById = (req, res) => {
-  const id = req.params.userId;
+  const userId = req.params.userId;
 
-  User.findById(id)
+  User.findById(userId)
     .then((user) => {
       if (!user) {
         return res.status(404).send({ message: "User is not found" });
@@ -30,13 +30,22 @@ const createUser = (req, res) => {
     .catch(() => res.status(500).send({ message: "Server error" }));
 };
 
-const updateUserInfo = () => User.findByIdAndUpdate(
+const updateUserInfo = (req, res) => {
 
-)
+  User.findByIdAndUpdate(req.user._id, req.body)
+    .then((user) => {
+      res.send(user)
+    })
+    .catch(() => res.status(500).send({ message: "Server error" }))
+}
 
-const updateUserAvatar = () => User.findByIdAndUpdate(
-
-)
+const updateUserAvatar = (req, res) => {
+  User.findByIdAndUpdate(req.user._id, req.body)
+    .then((user) => {
+      res.send(user)
+    })
+    .catch(() => res.status(500).send({ message: "Server error" }))
+  }
 
 module.exports = {
   getUsers,
