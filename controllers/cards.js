@@ -1,4 +1,3 @@
-
 const Card = require("../models/card");
 
 const getCards = (req, res) => {
@@ -31,22 +30,42 @@ const deleteCardById = (req, res) => {
     .catch(() => res.status(500).send({ message: "Server error" }));
 };
 
-const likeCard = (req) => Card.findByIdAndUpdate(
-  req.params.cardId,
-  { $addToSet: { likes: req.user._id } },
-  { new: true },
-)
+const likeCard = (req, res) => {
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $addToSet: { likes: req.user._id } },
+    { new: true }
+  )
+    .then((card) => {
+      if (!card) {
+        return res.status(404).send({ message: "Card is not found" });
+      } else {
+        res.send(card);
+      }
+    })
+    .catch(() => res.status(500).send({ message: "Server error" }));
+};
 
-const dislikeCard = (req) => Card.findByIdAndUpdate(
-  req.params.cardId,
-  { $pull: { likes: req.user._id } },
-  { new: true },
-)
+const dislikeCard = (req, res) => {
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $pull: { likes: req.user._id } },
+    { new: true }
+  )
+    .then((card) => {
+      if (!card) {
+        return res.status(404).send({ message: "Card is not found" });
+      } else {
+        res.send(card);
+      }
+    })
+    .catch(() => res.status(500).send({ message: "Server error" }));
+};
 
 module.exports = {
   getCards,
   createCard,
   deleteCardById,
   likeCard,
-  dislikeCard
+  dislikeCard,
 };
