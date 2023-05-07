@@ -1,9 +1,13 @@
 const Card = require("../models/card");
+const ERROR_CODE_INVALID_INPUT = 400;
+const ERROR_CODE_NOT_FOUND = 404;
+const ERROR_CODE_SERVER_ERROR = 500;
+const ERROR_MESSAGE_SERVER_ERROR = "Server error";
 
 const getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.send(cards))
-    .catch(() => res.status(500).send({ message: "Server error" }));
+    .catch(() => res.status(ERROR_CODE_SERVER_ERROR).send({ message: ERROR_MESSAGE_SERVER_ERROR }));
 };
 
 const createCard = (req, res) => {
@@ -15,9 +19,9 @@ const createCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        res.status(400).send({ message: "Card validation failed" });
+        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Card validation failed" });
       } else {
-        res.status(500).send({ message: "Server error" });
+        res.status(ERROR_CODE_SERVER_ERROR).send({ message: ERROR_MESSAGE_SERVER_ERROR });
       }
     });
 };
@@ -28,12 +32,18 @@ const deleteCardById = (req, res) => {
   Card.findByIdAndRemove(cardId)
     .then((card) => {
       if (!card) {
-        return res.status(404).send({ message: "Card is not found" });
+        return res.status(ERROR_CODE_NOT_FOUND).send({ message: "Card is not found" });
       } else {
         res.send(card);
       }
     })
-    .catch(() => res.status(500).send({ message: "Server error" }));
+    .catch((err) => {
+      if (err.name === "CastError") {
+        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Card validation failed" });
+      } else {
+        res.status(ERROR_CODE_SERVER_ERROR).send({ message: ERROR_MESSAGE_SERVER_ERROR });
+      }
+    });
 };
 
 const likeCard = (req, res) => {
@@ -44,12 +54,18 @@ const likeCard = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        return res.status(404).send({ message: "Card is not found" });
+        return res.status(ERROR_CODE_NOT_FOUND).send({ message: "Card is not found" });
       } else {
         res.send(card);
       }
     })
-    .catch(() => res.status(500).send({ message: "Server error" }));
+    .catch((err) => {
+      if (err.name === "CastError") {
+        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Card validation failed" });
+      } else {
+        res.status(ERROR_CODE_SERVER_ERROR).send({ message: ERROR_MESSAGE_SERVER_ERROR });
+      }
+    });
 };
 
 const dislikeCard = (req, res) => {
@@ -60,12 +76,18 @@ const dislikeCard = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        return res.status(404).send({ message: "Card is not found" });
+        return res.status(ERROR_CODE_NOT_FOUND).send({ message: "Card is not found" });
       } else {
         res.send(card);
       }
     })
-    .catch(() => res.status(500).send({ message: "Server error" }));
+    .catch((err) => {
+      if (err.name === "CastError") {
+        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Card validation failed" });
+      } else {
+        res.status(ERROR_CODE_SERVER_ERROR).send({ message: ERROR_MESSAGE_SERVER_ERROR });
+      }
+    });
 };
 
 module.exports = {
