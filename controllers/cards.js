@@ -13,7 +13,13 @@ const createCard = (req, res) => {
     .then((card) => {
       res.status(201).send(card);
     })
-    .catch(() => res.status(500).send({ message: "Server error" }));
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        res.status(400).send({ message: "Card validation failed" });
+      } else {
+        res.status(500).send({ message: "Server error" });
+      }
+    });
 };
 
 const deleteCardById = (req, res) => {
