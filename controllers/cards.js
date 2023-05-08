@@ -24,10 +24,12 @@ const createCard = (req, res) => {
     .catch((err) => {
       if (err.name === "ValidationError") {
         res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalud input" });
+        return;
       } else {
         res
           .status(ERROR_CODE_SERVER_ERROR)
           .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+          return;
       }
     });
 };
@@ -40,14 +42,18 @@ const deleteCardById = (req, res) => {
       res.send(card);
     })
     .catch((err) => {
+      console.log(err);
       if (err.name === "CastError") {
         res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid id" });
+        return;
       } else if (err.name === "DocumentNotFoundError") {
         res.status(ERROR_CODE_NOT_FOUND).send({ message: "Card is not found" });
+        return;
       } else {
         res
           .status(ERROR_CODE_SERVER_ERROR)
           .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+        return;
       }
     });
 };
@@ -64,12 +70,15 @@ const likeCard = (req, res) => {
     .catch((err) => {
       if (err.name === "CastError") {
         res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid id" });
+        return;
       } else if (err.name === "DocumentNotFoundError") {
         res.status(ERROR_CODE_NOT_FOUND).send({ message: "Card is not found" });
+        return;
       } else {
         res
           .status(ERROR_CODE_SERVER_ERROR)
           .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+        return;
       }
     });
 };
@@ -86,12 +95,15 @@ const dislikeCard = (req, res) => {
     .catch((err) => {
       if (err.name === "CastError") {
         res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid id" });
+        return;
       } else if (err.name === "DocumentNotFoundError") {
         res.status(ERROR_CODE_NOT_FOUND).send({ message: "Card is not found" });
+        return;
       } else {
         res
           .status(ERROR_CODE_SERVER_ERROR)
           .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+        return;
       }
     });
 };
