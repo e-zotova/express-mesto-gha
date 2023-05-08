@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const app = express();
 mongoose.connect("mongodb://127.0.0.1:27017/mestodb");
 
-app.listen(PORT, () => console.log("Сервер запущен."));
+app.listen(PORT, () => console.log("Server is started."));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
