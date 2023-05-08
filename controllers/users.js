@@ -19,18 +19,24 @@ const getUserById = (req, res) => {
 
   User.findById(userId)
     .then((user) => {
-      res.send(user);
+      if (!user) {
+        return res
+          .status(ERROR_CODE_NOT_FOUND)
+          .send({ message: "User is not found" });
+      } else {
+        res.send(user);
+      }
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid id" });
-      } else if (err.name === "DocumentNotFoundError") {
-        res.status(ERROR_CODE_NOT_FOUND).send({ message: "User is not found" });
-      } else {
-        res
-          .status(ERROR_CODE_SERVER_ERROR)
-          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+        return res
+          .status(ERROR_CODE_INVALID_INPUT)
+          .send({ message: "Invalid id" });
       }
+
+      res
+        .status(ERROR_CODE_SERVER_ERROR)
+        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
     });
 };
 
@@ -43,12 +49,14 @@ const createUser = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid input" });
-      } else {
-        res
-          .status(ERROR_CODE_SERVER_ERROR)
-          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+        return res
+          .status(ERROR_CODE_INVALID_INPUT)
+          .send({ message: "Invalid input" });
       }
+
+      res
+        .status(ERROR_CODE_SERVER_ERROR)
+        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
     });
 };
 
@@ -64,16 +72,20 @@ const updateUserInfo = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid input" });
-      } else if (err.name === "CastError") {
-        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid id" });
-      } else if (err.name === "DocumentNotFoundError") {
-        res.status(ERROR_CODE_NOT_FOUND).send({ message: "User is not found" });
-      } else {
-        res
-          .status(ERROR_CODE_SERVER_ERROR)
-          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+        return res
+          .status(ERROR_CODE_INVALID_INPUT)
+          .send({ message: "Invalid input" });
       }
+
+      if (err.name === "CastError") {
+        return res
+          .status(ERROR_CODE_INVALID_INPUT)
+          .send({ message: "Invalid id" });
+      }
+
+      res
+        .status(ERROR_CODE_SERVER_ERROR)
+        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
     });
 };
 
@@ -89,16 +101,20 @@ const updateUserAvatar = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid input" });
-      } else if (err.name === "CastError") {
-        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid id" });
-      } else if (err.name === "DocumentNotFoundError") {
-        res.status(ERROR_CODE_NOT_FOUND).send({ message: "User is not found" });
-      } else {
-        res
-          .status(ERROR_CODE_SERVER_ERROR)
-          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+        return res
+          .status(ERROR_CODE_INVALID_INPUT)
+          .send({ message: "Invalid input" });
       }
+
+      if (err.name === "CastError") {
+        return res
+          .status(ERROR_CODE_INVALID_INPUT)
+          .send({ message: "Invalid id" });
+      }
+
+      res
+        .status(ERROR_CODE_SERVER_ERROR)
+        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
     });
 };
 
