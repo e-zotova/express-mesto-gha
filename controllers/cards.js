@@ -1,23 +1,17 @@
 const Card = require("../models/card");
-
-const handleError = (res, err) => {
-  if (err.name === "ValidationError") {
-    res.status(400).send({ message: "Invalid input" });
-  } else if (err.name === "CastError") {
-    res.status(400).send({ message: "Invalid id" });
-  } else if (err.name === "DocumentNotFoundError") {
-    res.status(404).send({ message: "Card is not found" });
-  } else {
-    res.status(500).send({ message: "Server error" });
-  }
-};
+const ERROR_CODE_INVALID_INPUT = 400;
+const ERROR_CODE_NOT_FOUND = 404;
+const ERROR_CODE_SERVER_ERROR = 500;
+const ERROR_MESSAGE_SERVER_ERROR = "Server error";
 
 const getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.send(cards))
-    .catch((err) => {
-      handleError(res, err);
-    });
+    .catch(() =>
+      res
+        .status(ERROR_CODE_SERVER_ERROR)
+        .send({ message: ERROR_MESSAGE_SERVER_ERROR })
+    );
 };
 
 const createCard = (req, res) => {
@@ -28,7 +22,13 @@ const createCard = (req, res) => {
       res.status(201).send(card);
     })
     .catch((err) => {
-      handleError(res, err);
+      if (err.name === "ValidationError") {
+        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalud input" });
+      } else {
+        res
+          .status(ERROR_CODE_SERVER_ERROR)
+          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+      }
     });
 };
 
@@ -40,7 +40,15 @@ const deleteCardById = (req, res) => {
       res.send(card);
     })
     .catch((err) => {
-      handleError(res, err);
+      if (err.name === "CastError") {
+        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid id" });
+      } else if (err.name === "DocumentNotFoundError") {
+        res.status(ERROR_CODE_NOT_FOUND).send({ message: "Card is not found" });
+      } else {
+        res
+          .status(ERROR_CODE_SERVER_ERROR)
+          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+      }
     });
 };
 
@@ -54,7 +62,15 @@ const likeCard = (req, res) => {
       res.send(card);
     })
     .catch((err) => {
-      handleError(res, err);
+      if (err.name === "CastError") {
+        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid id" });
+      } else if (err.name === "DocumentNotFoundError") {
+        res.status(ERROR_CODE_NOT_FOUND).send({ message: "Card is not found" });
+      } else {
+        res
+          .status(ERROR_CODE_SERVER_ERROR)
+          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+      }
     });
 };
 
@@ -68,7 +84,15 @@ const dislikeCard = (req, res) => {
       res.send(card);
     })
     .catch((err) => {
-      handleError(res, err);
+      if (err.name === "CastError") {
+        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid id" });
+      } else if (err.name === "DocumentNotFoundError") {
+        res.status(ERROR_CODE_NOT_FOUND).send({ message: "Card is not found" });
+      } else {
+        res
+          .status(ERROR_CODE_SERVER_ERROR)
+          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+      }
     });
 };
 
