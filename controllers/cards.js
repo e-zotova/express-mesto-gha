@@ -7,7 +7,11 @@ const ERROR_MESSAGE_SERVER_ERROR = "Server error";
 const getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.send(cards))
-    .catch(() => res.status(ERROR_CODE_SERVER_ERROR).send({ message: ERROR_MESSAGE_SERVER_ERROR }));
+    .catch(() =>
+      res
+        .status(ERROR_CODE_SERVER_ERROR)
+        .send({ message: ERROR_MESSAGE_SERVER_ERROR })
+    );
 };
 
 const createCard = (req, res) => {
@@ -21,7 +25,9 @@ const createCard = (req, res) => {
       if (err.name === "ValidationError") {
         res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalud input" });
       } else {
-        res.status(ERROR_CODE_SERVER_ERROR).send({ message: ERROR_MESSAGE_SERVER_ERROR });
+        res
+          .status(ERROR_CODE_SERVER_ERROR)
+          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
       }
     });
 };
@@ -32,7 +38,9 @@ const deleteCardById = (req, res) => {
   Card.findByIdAndRemove(cardId)
     .then((card) => {
       if (!card) {
-        return res.status(ERROR_CODE_NOT_FOUND).send({ message: "Card is not found" });
+        return res
+          .status(ERROR_CODE_NOT_FOUND)
+          .send({ message: "Card is not found" });
       } else {
         res.send(card);
       }
@@ -41,7 +49,9 @@ const deleteCardById = (req, res) => {
       if (err.name === "CastError") {
         res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid id" });
       } else {
-        res.status(ERROR_CODE_SERVER_ERROR).send({ message: ERROR_MESSAGE_SERVER_ERROR });
+        res
+          .status(ERROR_CODE_SERVER_ERROR)
+          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
       }
     });
 };
@@ -54,7 +64,9 @@ const likeCard = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        return res.status(ERROR_CODE_NOT_FOUND).send({ message: "Card is not found" });
+        return res
+          .status(ERROR_CODE_NOT_FOUND)
+          .send({ message: "Card is not found" });
       } else {
         res.send(card);
       }
@@ -63,7 +75,9 @@ const likeCard = (req, res) => {
       if (err.name === "CastError") {
         res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid id" });
       } else {
-        res.status(ERROR_CODE_SERVER_ERROR).send({ message: ERROR_MESSAGE_SERVER_ERROR });
+        res
+          .status(ERROR_CODE_SERVER_ERROR)
+          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
       }
     });
 };
@@ -76,7 +90,9 @@ const dislikeCard = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        return res.status(ERROR_CODE_NOT_FOUND).send({ message: "Card is not found" });
+        return res
+          .status(ERROR_CODE_NOT_FOUND)
+          .send({ message: "Card is not found" });
       } else {
         res.send(card);
       }
@@ -85,7 +101,9 @@ const dislikeCard = (req, res) => {
       if (err.name === "CastError") {
         res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid id" });
       } else {
-        res.status(ERROR_CODE_SERVER_ERROR).send({ message: ERROR_MESSAGE_SERVER_ERROR });
+        res
+          .status(ERROR_CODE_SERVER_ERROR)
+          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
       }
     });
 };
