@@ -5,7 +5,7 @@ const handleError = (res, err) => {
     res.status(400).send({ message: "Invalid input" });
   } else if (err.name === "CastError") {
     res.status(400).send({ message: "Invalid id" });
-  } else if (err.name === "DocumentNotFound") {
+  } else if (err.name === "DocumentNotFoundError") {
     res.status(404).send({ message: "Card is not found" });
   } else {
     res.status(500).send({ message: "Server error" });
