@@ -19,7 +19,7 @@ const createCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Card validation failed" });
+        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalud input" });
       } else {
         res.status(ERROR_CODE_SERVER_ERROR).send({ message: ERROR_MESSAGE_SERVER_ERROR });
       }
@@ -39,7 +39,7 @@ const deleteCardById = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Card validation failed" });
+        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid id" });
       } else {
         res.status(ERROR_CODE_SERVER_ERROR).send({ message: ERROR_MESSAGE_SERVER_ERROR });
       }
@@ -61,7 +61,7 @@ const likeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Card validation failed" });
+        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid id" });
       } else {
         res.status(ERROR_CODE_SERVER_ERROR).send({ message: ERROR_MESSAGE_SERVER_ERROR });
       }
@@ -83,7 +83,7 @@ const dislikeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Card validation failed" });
+        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid id" });
       } else {
         res.status(ERROR_CODE_SERVER_ERROR).send({ message: ERROR_MESSAGE_SERVER_ERROR });
       }

@@ -24,7 +24,7 @@ const getUserById = (req, res) => {
     .catch((err) => {
       console.log(err);
       if (err.name === "CastError") {
-        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "User validation failed" });
+        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid id" });
       } else {
         res.status(ERROR_CODE_SERVER_ERROR).send({ message: ERROR_MESSAGE_SERVER_ERROR });
       }
@@ -40,7 +40,7 @@ const createUser = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "User validation failed" });
+        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid input" });
       } else {
         res.status(ERROR_CODE_SERVER_ERROR).send({ message: ERROR_MESSAGE_SERVER_ERROR });
       }
@@ -48,13 +48,16 @@ const createUser = (req, res) => {
 };
 
 const updateUserInfo = (req, res) => {
-  User.findByIdAndUpdate(req.user._id, req.body)
+  const { name, about } = req.body;
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       res.send(user);
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "User validation failed" });
+        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid input" });
+      } else if (err.name === "CastError") {
+        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid id" });
       } else {
         res.status(ERROR_CODE_SERVER_ERROR).send({ message: ERROR_MESSAGE_SERVER_ERROR });
       }
@@ -62,13 +65,16 @@ const updateUserInfo = (req, res) => {
 };
 
 const updateUserAvatar = (req, res) => {
-  User.findByIdAndUpdate(req.user._id, req.body)
+  const { avatar } = req.body;
+  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .then((user) => {
       res.send(user);
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "User validation failed" });
+        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid input" });
+      } else if (err.name === "CastError") {
+        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid id" });
       } else {
         res.status(ERROR_CODE_SERVER_ERROR).send({ message: ERROR_MESSAGE_SERVER_ERROR });
       }
