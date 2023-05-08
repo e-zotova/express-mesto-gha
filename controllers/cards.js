@@ -26,11 +26,11 @@ const createCard = (req, res) => {
         return res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: "Invalud input" });
+      } else {
+        res
+          .status(ERROR_CODE_SERVER_ERROR)
+          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
       }
-
-      res
-        .status(ERROR_CODE_SERVER_ERROR)
-        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
     });
 };
 
@@ -52,11 +52,11 @@ const deleteCardById = (req, res) => {
         return res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: "Invalid id" });
+      } else {
+        res
+          .status(ERROR_CODE_SERVER_ERROR)
+          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
       }
-
-      res
-        .status(ERROR_CODE_SERVER_ERROR)
-        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
     });
 };
 
@@ -80,10 +80,11 @@ const likeCard = (req, res) => {
         return res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: "Invalid id" });
+      } else {
+        res
+          .status(ERROR_CODE_SERVER_ERROR)
+          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
       }
-      res
-        .status(ERROR_CODE_SERVER_ERROR)
-        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
     });
 };
 
@@ -107,10 +108,11 @@ const dislikeCard = (req, res) => {
         return res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: "Invalid id" });
+      } else {
+        res
+          .status(ERROR_CODE_SERVER_ERROR)
+          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
       }
-      res
-        .status(ERROR_CODE_SERVER_ERROR)
-        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
     });
 };
 

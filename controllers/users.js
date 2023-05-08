@@ -32,11 +32,11 @@ const getUserById = (req, res) => {
         return res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: "Invalid id" });
+      } else {
+        res
+          .status(ERROR_CODE_SERVER_ERROR)
+          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
       }
-
-      res
-        .status(ERROR_CODE_SERVER_ERROR)
-        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
     });
 };
 
@@ -52,11 +52,11 @@ const createUser = (req, res) => {
         return res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: "Invalid input" });
+      } else {
+        res
+          .status(ERROR_CODE_SERVER_ERROR)
+          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
       }
-
-      res
-        .status(ERROR_CODE_SERVER_ERROR)
-        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
     });
 };
 
@@ -75,17 +75,15 @@ const updateUserInfo = (req, res) => {
         return res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: "Invalid input" });
-      }
-
-      if (err.name === "CastError") {
+      } else if (err.name === "CastError") {
         return res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: "Invalid id" });
+      } else {
+        res
+          .status(ERROR_CODE_SERVER_ERROR)
+          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
       }
-
-      res
-        .status(ERROR_CODE_SERVER_ERROR)
-        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
     });
 };
 
@@ -104,17 +102,15 @@ const updateUserAvatar = (req, res) => {
         return res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: "Invalid input" });
-      }
-
-      if (err.name === "CastError") {
+      } else if (err.name === "CastError") {
         return res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: "Invalid id" });
+      } else {
+        res
+          .status(ERROR_CODE_SERVER_ERROR)
+          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
       }
-
-      res
-        .status(ERROR_CODE_SERVER_ERROR)
-        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
     });
 };
 
