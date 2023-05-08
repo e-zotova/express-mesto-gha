@@ -1,17 +1,23 @@
 const User = require("../models/user");
-const ERROR_CODE_INVALID_INPUT = 400;
-const ERROR_CODE_NOT_FOUND = 404;
-const ERROR_CODE_SERVER_ERROR = 500;
-const ERROR_MESSAGE_SERVER_ERROR = "Server error";
+
+const handleError = (res, err) => {
+  if (err.name === "ValidationError") {
+    res.status(400).send({ message: "Invalid input" });
+  } else if (err.name === "CastError") {
+    res.status(400).send({ message: "Invalid id" });
+  } else if (err.name === "DocumentNotFound") {
+    res.status(404).send({ message: "User is not found" });
+  } else {
+    res.status(500).send({ message: "Server error" });
+  }
+};
 
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch(() =>
-      res
-        .status(ERROR_CODE_SERVER_ERROR)
-        .send({ message: ERROR_MESSAGE_SERVER_ERROR })
-    );
+    .catch((err) => {
+      handleError(res, err);
+    });
 };
 
 const getUserById = (req, res) => {
@@ -19,23 +25,10 @@ const getUserById = (req, res) => {
 
   User.findById(userId)
     .then((user) => {
-      if (!user) {
-        return res
-          .status(ERROR_CODE_NOT_FOUND)
-          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
-      } else {
-        res.send(user);
-      }
+      res.send(user);
     })
     .catch((err) => {
-      console.log(err);
-      if (err.name === "CastError") {
-        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid id" });
-      } else {
-        res
-          .status(ERROR_CODE_SERVER_ERROR)
-          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
-      }
+      handleError(res, err);
     });
 };
 
@@ -47,13 +40,7 @@ const createUser = (req, res) => {
       res.status(201).send(user);
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid input" });
-      } else {
-        res
-          .status(ERROR_CODE_SERVER_ERROR)
-          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
-      }
+      handleError(res, err);
     });
 };
 
@@ -68,15 +55,7 @@ const updateUserInfo = (req, res) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid input" });
-      } else if (err.name === "CastError") {
-        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid id" });
-      } else {
-        res
-          .status(ERROR_CODE_SERVER_ERROR)
-          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
-      }
+      handleError(res, err);
     });
 };
 
@@ -91,15 +70,7 @@ const updateUserAvatar = (req, res) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid input" });
-      } else if (err.name === "CastError") {
-        res.status(ERROR_CODE_INVALID_INPUT).send({ message: "Invalid id" });
-      } else {
-        res
-          .status(ERROR_CODE_SERVER_ERROR)
-          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
-      }
+      handleError(res, err);
     });
 };
 
