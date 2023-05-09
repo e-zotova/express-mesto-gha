@@ -16,7 +16,7 @@ const getUsers = (req, res) => {
 const getUserById = (req, res) => {
   const { userId } = req.params;
 
-  User.findById({ userId })
+  User.findById(userId)
     .then((user) => {
       if (!user) {
         res
