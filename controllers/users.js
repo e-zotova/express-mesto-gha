@@ -1,42 +1,41 @@
-const User = require("../models/user");
+const User = require('../models/user');
+
 const ERROR_CODE_INVALID_INPUT = 400;
 const ERROR_CODE_NOT_FOUND = 404;
 const ERROR_CODE_SERVER_ERROR = 500;
-const ERROR_MESSAGE_SERVER_ERROR = "Server error";
+const ERROR_MESSAGE_SERVER_ERROR = 'Server error';
 
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch(() =>
-      res
-        .status(ERROR_CODE_SERVER_ERROR)
-        .send({ message: ERROR_MESSAGE_SERVER_ERROR })
-    );
+    .catch(() => res
+      .status(ERROR_CODE_SERVER_ERROR)
+      .send({ message: ERROR_MESSAGE_SERVER_ERROR }));
 };
 
 const getUserById = (req, res) => {
-  const userId = req.params.userId;
+  const { userId } = req.params;
 
-  User.findById(userId)
+  User.findById({ userId })
     .then((user) => {
       if (!user) {
-        return res
+        res
           .status(ERROR_CODE_NOT_FOUND)
-          .send({ message: "User is not found" });
-      } else {
-        res.send(user);
+          .send({ message: 'User is not found' });
+        return;
       }
+      res.send(user);
     })
     .catch((err) => {
-      if (err.name === "CastError") {
-        return res
-          .status(ERROR_CODE_INVALID_INPUT)
-          .send({ message: "Invalid id" });
-      } else {
+      if (err.name === 'CastError') {
         res
-          .status(ERROR_CODE_SERVER_ERROR)
-          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+          .status(ERROR_CODE_INVALID_INPUT)
+          .send({ message: 'Invalid id' });
+        return;
       }
+      res
+        .status(ERROR_CODE_SERVER_ERROR)
+        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
     });
 };
 
@@ -48,15 +47,15 @@ const createUser = (req, res) => {
       res.status(201).send(user);
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        return res
-          .status(ERROR_CODE_INVALID_INPUT)
-          .send({ message: "Invalid input" });
-      } else {
+      if (err.name === 'ValidationError') {
         res
-          .status(ERROR_CODE_SERVER_ERROR)
-          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+          .status(ERROR_CODE_INVALID_INPUT)
+          .send({ message: 'Invalid input' });
+        return;
       }
+      res
+        .status(ERROR_CODE_SERVER_ERROR)
+        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
     });
 };
 
@@ -65,25 +64,28 @@ const updateUserInfo = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
     { name, about },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   )
     .then((user) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        return res
-          .status(ERROR_CODE_INVALID_INPUT)
-          .send({ message: "Invalid input" });
-      } else if (err.name === "CastError") {
-        return res
-          .status(ERROR_CODE_INVALID_INPUT)
-          .send({ message: "Invalid id" });
-      } else {
+      if (err.name === 'ValidationError') {
         res
-          .status(ERROR_CODE_SERVER_ERROR)
-          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+          .status(ERROR_CODE_INVALID_INPUT)
+          .send({ message: 'Invalid input' });
+        return;
       }
+
+      if (err.name === 'CastError') {
+        res
+          .status(ERROR_CODE_INVALID_INPUT)
+          .send({ message: 'Invalid id' });
+        return;
+      }
+      res
+        .status(ERROR_CODE_SERVER_ERROR)
+        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
     });
 };
 
@@ -92,25 +94,28 @@ const updateUserAvatar = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
     { avatar },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   )
     .then((user) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        return res
-          .status(ERROR_CODE_INVALID_INPUT)
-          .send({ message: "Invalid input" });
-      } else if (err.name === "CastError") {
-        return res
-          .status(ERROR_CODE_INVALID_INPUT)
-          .send({ message: "Invalid id" });
-      } else {
+      if (err.name === 'ValidationError') {
         res
-          .status(ERROR_CODE_SERVER_ERROR)
-          .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+          .status(ERROR_CODE_INVALID_INPUT)
+          .send({ message: 'Invalid input' });
+        return;
       }
+
+      if (err.name === 'CastError') {
+        res
+          .status(ERROR_CODE_INVALID_INPUT)
+          .send({ message: 'Invalid id' });
+        return;
+      }
+      res
+        .status(ERROR_CODE_SERVER_ERROR)
+        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
     });
 };
 
