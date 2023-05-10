@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 const objectId = mongoose.Schema.Types.ObjectId;
 
@@ -11,6 +12,10 @@ const cardSchema = new mongoose.Schema({
   },
   link: {
     type: String,
+    validate: {
+      validator: (v) => validator.isURL(v),
+      message: 'Некорректный URL карточки',
+    },
     required: true,
   },
   owner: {
@@ -27,6 +32,6 @@ const cardSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-});
+}, { versionKey: false });
 
 module.exports = mongoose.model('card', cardSchema);

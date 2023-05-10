@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
 
 const { PORT = 3000 } = process.env;
 const router = require('./routes');
@@ -19,4 +20,6 @@ app.use((req, res, next) => {
 });
 
 app.use(router);
+app.use(helmet());
+
 app.listen(PORT, () => console.log('Server is started.'));
