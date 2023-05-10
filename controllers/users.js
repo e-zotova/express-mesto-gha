@@ -1,9 +1,11 @@
 const User = require('../models/user');
 
-const ERROR_CODE_INVALID_INPUT = 400;
-const ERROR_CODE_NOT_FOUND = 404;
-const ERROR_CODE_SERVER_ERROR = 500;
-const ERROR_MESSAGE_SERVER_ERROR = 'Server error';
+const {
+  ERROR_CODE_INVALID_INPUT,
+  ERROR_CODE_NOT_FOUND,
+  ERROR_CODE_SERVER_ERROR,
+  ERROR_MESSAGE_SERVER_ERROR,
+} = require('../utils/constants');
 
 const getUsers = (req, res) => {
   User.find({})
@@ -67,6 +69,12 @@ const updateUserInfo = (req, res) => {
     { new: true, runValidators: true },
   )
     .then((user) => {
+      if (!user) {
+        res
+          .status(ERROR_CODE_NOT_FOUND)
+          .send({ message: 'User is not found' });
+        return;
+      }
       res.send(user);
     })
     .catch((err) => {
@@ -97,6 +105,12 @@ const updateUserAvatar = (req, res) => {
     { new: true, runValidators: true },
   )
     .then((user) => {
+      if (!user) {
+        res
+          .status(ERROR_CODE_NOT_FOUND)
+          .send({ message: 'User is not found' });
+        return;
+      }
       res.send(user);
     })
     .catch((err) => {
