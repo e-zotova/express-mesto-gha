@@ -39,13 +39,8 @@ const deleteCardById = (req, res) => {
   const { cardId } = req.params;
 
   Card.findByIdAndRemove(cardId)
+    .orFail()
     .then((card) => {
-      if (!card) {
-        res
-          .status(ERROR_CODE_NOT_FOUND)
-          .send({ message: 'Card is not found' });
-        return;
-      }
       res.send(card);
     })
     .catch((err) => {
@@ -53,6 +48,12 @@ const deleteCardById = (req, res) => {
         res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: 'Invalid id' });
+        return;
+      }
+      if (err.name === 'DocumentNotFoundError') {
+        res
+          .status(ERROR_CODE_NOT_FOUND)
+          .send({ message: 'Card is not found' });
         return;
       }
       res
@@ -67,13 +68,8 @@ const likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
+    .orFail()
     .then((card) => {
-      if (!card) {
-        res
-          .status(ERROR_CODE_NOT_FOUND)
-          .send({ message: 'Card is not found' });
-        return;
-      }
       res.send(card);
     })
     .catch((err) => {
@@ -81,6 +77,12 @@ const likeCard = (req, res) => {
         res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: 'Invalid id' });
+        return;
+      }
+      if (err.name === 'DocumentNotFoundError') {
+        res
+          .status(ERROR_CODE_NOT_FOUND)
+          .send({ message: 'Card is not found' });
         return;
       }
       res
@@ -95,13 +97,8 @@ const dislikeCard = (req, res) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
+    .orFail()
     .then((card) => {
-      if (!card) {
-        res
-          .status(ERROR_CODE_NOT_FOUND)
-          .send({ message: 'Card is not found' });
-        return;
-      }
       res.send(card);
     })
     .catch((err) => {
@@ -109,6 +106,12 @@ const dislikeCard = (req, res) => {
         res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: 'Invalid id' });
+        return;
+      }
+      if (err.name === 'DocumentNotFoundError') {
+        res
+          .status(ERROR_CODE_NOT_FOUND)
+          .send({ message: 'Card is not found' });
         return;
       }
       res

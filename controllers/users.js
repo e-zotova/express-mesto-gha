@@ -19,13 +19,8 @@ const getUserById = (req, res) => {
   const { userId } = req.params;
 
   User.findById(userId)
+    .orFail()
     .then((user) => {
-      if (!user) {
-        res
-          .status(ERROR_CODE_NOT_FOUND)
-          .send({ message: 'User is not found' });
-        return;
-      }
       res.send(user);
     })
     .catch((err) => {
@@ -33,6 +28,12 @@ const getUserById = (req, res) => {
         res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: 'Invalid id' });
+        return;
+      }
+      if (err.name === 'DocumentNotFoundError') {
+        res
+          .status(ERROR_CODE_NOT_FOUND)
+          .send({ message: 'User is not found' });
         return;
       }
       res
@@ -68,13 +69,8 @@ const updateUserInfo = (req, res) => {
     { name, about },
     { new: true, runValidators: true },
   )
+    .orFail()
     .then((user) => {
-      if (!user) {
-        res
-          .status(ERROR_CODE_NOT_FOUND)
-          .send({ message: 'User is not found' });
-        return;
-      }
       res.send(user);
     })
     .catch((err) => {
@@ -84,11 +80,16 @@ const updateUserInfo = (req, res) => {
           .send({ message: 'Invalid input' });
         return;
       }
-
       if (err.name === 'CastError') {
         res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: 'Invalid id' });
+        return;
+      }
+      if (err.name === 'DocumentNotFoundError') {
+        res
+          .status(ERROR_CODE_NOT_FOUND)
+          .send({ message: 'Card is not found' });
         return;
       }
       res
@@ -104,13 +105,8 @@ const updateUserAvatar = (req, res) => {
     { avatar },
     { new: true, runValidators: true },
   )
+    .orFail()
     .then((user) => {
-      if (!user) {
-        res
-          .status(ERROR_CODE_NOT_FOUND)
-          .send({ message: 'User is not found' });
-        return;
-      }
       res.send(user);
     })
     .catch((err) => {
@@ -120,11 +116,16 @@ const updateUserAvatar = (req, res) => {
           .send({ message: 'Invalid input' });
         return;
       }
-
       if (err.name === 'CastError') {
         res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: 'Invalid id' });
+        return;
+      }
+      if (err.name === 'DocumentNotFoundError') {
+        res
+          .status(ERROR_CODE_NOT_FOUND)
+          .send({ message: 'Card is not found' });
         return;
       }
       res
