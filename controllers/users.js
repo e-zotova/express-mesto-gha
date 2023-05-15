@@ -1,3 +1,5 @@
+const bcrypt = require('bcryptjs');
+
 const User = require('../models/user');
 
 const {
@@ -43,9 +45,18 @@ const getUserById = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  const data = req.body;
+  const {
+    email, password, name, about, avatar,
+  } = req.body;
 
-  User.create(data)
+  bcrypt.hash(password, 10)
+    .then((hash) => User.create({
+      email,
+      password: hash,
+      name,
+      about,
+      avatar,
+    }))
     .then((user) => {
       res.status(201).send(user);
     })
@@ -59,6 +70,32 @@ const createUser = (req, res) => {
       res
         .status(ERROR_CODE_SERVER_ERROR)
         .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+    });
+};
+
+const login = (req, res) => {
+  const { email, password } = req.body;
+
+  User.findOne({ email })
+    .then((user) => {
+      if (!user) {
+        return Promise.reject(new Error('Неправильные почта или пароль'));
+      }
+
+      return bcrypt.compare(password, user.password);
+    })
+    .then((matched) => {
+      if (!matched) {
+        return Promise.reject(new Error('Неправильные почта или пароль'));
+      }
+      return res.send(
+        { token: 'Здесь нужно отправить токен' },
+      );
+    })
+    .catch((err) => {
+      res
+        .status(401)
+        .send({ message: err.message });
     });
 };
 
@@ -138,6 +175,7 @@ module.exports = {
   getUsers,
   getUserById,
   createUser,
+  login,
   updateUserInfo,
   updateUserAvatar,
 };
