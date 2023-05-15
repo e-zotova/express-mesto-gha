@@ -4,6 +4,7 @@ const User = require('../models/user');
 const {
   ERROR_CODE_INVALID_INPUT,
   ERROR_CODE_NOT_FOUND,
+  ERROR_CODE_CONFLICT,
   ERROR_CODE_SERVER_ERROR,
   ERROR_MESSAGE_SERVER_ERROR,
 } = require('../utils/constants');
@@ -25,6 +26,12 @@ const createUser = (req, res) => {
       res.status(201).send(user);
     })
     .catch((err) => {
+      if (err.code === 11000) {
+        res
+          .status(ERROR_CODE_CONFLICT)
+          .send({ message: 'User already exists' });
+        return;
+      }
       if (err.name === 'ValidationError') {
         res
           .status(ERROR_CODE_INVALID_INPUT)
@@ -35,10 +42,6 @@ const createUser = (req, res) => {
         .status(ERROR_CODE_SERVER_ERROR)
         .send({ message: ERROR_MESSAGE_SERVER_ERROR });
     });
-};
-
-const register = (req) => {
-  console.log(req.body);
 };
 
 const login = (req, res) => {
@@ -175,11 +178,10 @@ const updateUserAvatar = (req, res) => {
 };
 
 module.exports = {
+  createUser,
+  login,
   getUsers,
   getUserById,
-  createUser,
-  register,
-  login,
   updateUserInfo,
   updateUserAvatar,
 };
