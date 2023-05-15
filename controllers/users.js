@@ -1,8 +1,10 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 const {
   ERROR_CODE_INVALID_INPUT,
+  ERROR_CODE_UNAUTHORIZED,
   ERROR_CODE_NOT_FOUND,
   ERROR_CODE_CONFLICT,
   ERROR_CODE_SERVER_ERROR,
@@ -49,24 +51,24 @@ const login = (req, res) => {
 
   User.findOne({ email })
     .then((user) => {
-      if (!user) {
-        return Promise.reject(new Error('Неправильные почта или пароль'));
-      }
-
-      return bcrypt.compare(password, user.password);
-    })
-    .then((matched) => {
-      if (!matched) {
-        return Promise.reject(new Error('Неправильные почта или пароль'));
-      }
-      return res.send(
-        { token: 'Здесь нужно отправить токен' },
-      );
+      bcrypt.compare(password, user.password)
+        .then(() => {
+          res.send({
+            token: jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' }),
+          });
+        });
     })
     .catch((err) => {
+      console.log(err);
+      if (err.name === 'DocumentNotFoundError' || password !== err.password) {
+        res
+          .status(ERROR_CODE_UNAUTHORIZED)
+          .send({ message: 'Incorrect email or password' });
+        return;
+      }
       res
-        .status(401)
-        .send({ message: err.message });
+        .status(ERROR_CODE_SERVER_ERROR)
+        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
     });
 };
 
