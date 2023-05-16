@@ -86,8 +86,22 @@ const getUsers = (req, res) => {
 };
 
 const getCurrentUser = (req, res) => {
-  User.find({})
-    .then((users) => res.send(users));
+  User.findById(req.user.id)
+    .orFail()
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'DocumentNotFoundError') {
+        res
+          .status(ERROR_CODE_NOT_FOUND)
+          .send({ message: 'User is not found' });
+        return;
+      }
+      res
+        .status(ERROR_CODE_SERVER_ERROR)
+        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+    });
 };
 
 const getUserById = (req, res) => {
