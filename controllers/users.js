@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+
+const { getJwtToken } = require('../utils/jwt');
 
 const {
   ERROR_CODE_INVALID_INPUT,
@@ -49,18 +50,22 @@ const createUser = (req, res) => {
 const login = (req, res) => {
   const { email, password } = req.body;
 
-  User.findOne({ email })
+  User.findOne({ email }).select('+password')
     .then((user) => {
       bcrypt.compare(password, user.password)
-        .then(() => {
-          res.send({
-            token: jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' }),
-          });
+        .then((matched) => {
+          if (!matched) {
+            res
+              .status(ERROR_CODE_UNAUTHORIZED)
+              .send({ message: 'Incorrect email or password' });
+            return;
+          }
+          const token = getJwtToken(user._id);
+          res.send({ token });
         });
     })
     .catch((err) => {
-      console.log(err);
-      if (err.name === 'DocumentNotFoundError' || password !== err.password) {
+      if (err.name === 'DocumentNotFoundError' || err.name === 'TypeError') {
         res
           .status(ERROR_CODE_UNAUTHORIZED)
           .send({ message: 'Incorrect email or password' });
@@ -78,6 +83,11 @@ const getUsers = (req, res) => {
     .catch(() => res
       .status(ERROR_CODE_SERVER_ERROR)
       .send({ message: ERROR_MESSAGE_SERVER_ERROR }));
+};
+
+const getCurrentUser = (req, res) => {
+  User.find({})
+    .then((users) => res.send(users));
 };
 
 const getUserById = (req, res) => {
@@ -183,6 +193,7 @@ module.exports = {
   createUser,
   login,
   getUsers,
+  getCurrentUser,
   getUserById,
   updateUserInfo,
   updateUserAvatar,
