@@ -2,14 +2,12 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
 const { getJwtToken } = require('../utils/jwt');
+const handleErrors = require('../middlewares/handleErrors');
 
 const {
   ERROR_CODE_INVALID_INPUT,
   ERROR_CODE_UNAUTHORIZED,
   ERROR_CODE_NOT_FOUND,
-  ERROR_CODE_CONFLICT,
-  ERROR_CODE_SERVER_ERROR,
-  ERROR_MESSAGE_SERVER_ERROR,
 } = require('../utils/constants');
 
 const createUser = (req, res) => {
@@ -29,60 +27,35 @@ const createUser = (req, res) => {
       res.status(201).send(user);
     })
     .catch((err) => {
-      if (err.code === 11000) {
-        res
-          .status(ERROR_CODE_CONFLICT)
-          .send({ message: 'User already exists' });
-        return;
-      }
       if (err.name === 'ValidationError') {
         res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: 'Invalid input' });
         return;
       }
-      res
-        .status(ERROR_CODE_SERVER_ERROR)
-        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+      handleErrors(err, req, res);
     });
 };
 
 const login = (req, res) => {
   const { email, password } = req.body;
 
-  User.findOne({ email }).select('+password')
+  return User.findUserByCredentials(email, password)
     .then((user) => {
-      bcrypt.compare(password, user.password)
-        .then((matched) => {
-          if (!matched) {
-            res
-              .status(ERROR_CODE_UNAUTHORIZED)
-              .send({ message: 'Incorrect email or password' });
-            return;
-          }
-          const token = getJwtToken(user._id);
-          res.send({ token });
-        });
+      const token = getJwtToken(user._id);
+      res.send({ token });
     })
     .catch((err) => {
-      if (err.name === 'DocumentNotFoundError' || err.name === 'TypeError') {
-        res
-          .status(ERROR_CODE_UNAUTHORIZED)
-          .send({ message: 'Incorrect email or password' });
-        return;
-      }
       res
-        .status(ERROR_CODE_SERVER_ERROR)
-        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+        .status(ERROR_CODE_UNAUTHORIZED)
+        .send({ message: err.message });
     });
 };
 
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch(() => res
-      .status(ERROR_CODE_SERVER_ERROR)
-      .send({ message: ERROR_MESSAGE_SERVER_ERROR }));
+    .catch((err) => handleErrors(err, req, res));
 };
 
 const getCurrentUser = (req, res) => {
@@ -98,9 +71,7 @@ const getCurrentUser = (req, res) => {
           .send({ message: 'User is not found' });
         return;
       }
-      res
-        .status(ERROR_CODE_SERVER_ERROR)
-        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+      handleErrors(err, req, res);
     });
 };
 
@@ -125,9 +96,7 @@ const getUserById = (req, res) => {
           .send({ message: 'User is not found' });
         return;
       }
-      res
-        .status(ERROR_CODE_SERVER_ERROR)
-        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+      handleErrors(err, req, res);
     });
 };
 
@@ -161,9 +130,7 @@ const updateUserInfo = (req, res) => {
           .send({ message: 'Card is not found' });
         return;
       }
-      res
-        .status(ERROR_CODE_SERVER_ERROR)
-        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+      handleErrors(err, req, res);
     });
 };
 
@@ -197,9 +164,7 @@ const updateUserAvatar = (req, res) => {
           .send({ message: 'Card is not found' });
         return;
       }
-      res
-        .status(ERROR_CODE_SERVER_ERROR)
-        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+      handleErrors(err, req, res);
     });
 };
 

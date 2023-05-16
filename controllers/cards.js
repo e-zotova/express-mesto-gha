@@ -1,18 +1,15 @@
 const Card = require('../models/card');
+const handleErrors = require('../middlewares/handleErrors');
 
 const {
   ERROR_CODE_INVALID_INPUT,
   ERROR_CODE_NOT_FOUND,
-  ERROR_CODE_SERVER_ERROR,
-  ERROR_MESSAGE_SERVER_ERROR,
 } = require('../utils/constants');
 
 const getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.send(cards))
-    .catch(() => res
-      .status(ERROR_CODE_SERVER_ERROR)
-      .send({ message: ERROR_MESSAGE_SERVER_ERROR }));
+    .catch((err) => handleErrors(err, req, res));
 };
 
 const createCard = (req, res) => {
@@ -29,9 +26,7 @@ const createCard = (req, res) => {
           .send({ message: 'Invalud input' });
         return;
       }
-      res
-        .status(ERROR_CODE_SERVER_ERROR)
-        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+      handleErrors(err, req, res);
     });
 };
 
@@ -56,9 +51,7 @@ const deleteCardById = (req, res) => {
           .send({ message: 'Card is not found' });
         return;
       }
-      res
-        .status(ERROR_CODE_SERVER_ERROR)
-        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+      handleErrors(err, req, res);
     });
 };
 
@@ -85,9 +78,7 @@ const likeCard = (req, res) => {
           .send({ message: 'Card is not found' });
         return;
       }
-      res
-        .status(ERROR_CODE_SERVER_ERROR)
-        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+      handleErrors(err, req, res);
     });
 };
 
@@ -114,9 +105,7 @@ const dislikeCard = (req, res) => {
           .send({ message: 'Card is not found' });
         return;
       }
-      res
-        .status(ERROR_CODE_SERVER_ERROR)
-        .send({ message: ERROR_MESSAGE_SERVER_ERROR });
+      handleErrors(err, req, res);
     });
 };
 
