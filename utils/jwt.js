@@ -4,4 +4,6 @@ const JWT_SECRET = 'someveryveryverysecretkey';
 
 const getJwtToken = (id) => jwt.sign({ id }, JWT_SECRET, { expiresIn: '7d' });
 
-module.exports = { getJwtToken };
+const verifyJwtToken = (token) => jwt.verify(token, JWT_SECRET);
+
+module.exports = { getJwtToken, verifyJwtToken };
