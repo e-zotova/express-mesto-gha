@@ -33,16 +33,16 @@ const createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res
+        res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: 'Invalid input' });
       }
       if (err.code === 11000) {
-        return res
+        res
           .status(ERROR_CODE_CONFLICT)
           .send({ message: 'Document already exists in database' });
       }
-      return next(err, req, res);
+      next(err);
     });
 };
 

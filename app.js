@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
+const { errors } = require('celebrate');
 
 const { PORT = 3000 } = process.env;
 const router = require('./routes');
@@ -14,6 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(router);
 app.use(helmet());
+app.use(errors());
 app.use(handleErrorMiddleware);
 
 app.listen(PORT, () => console.log('Server is started.'));
