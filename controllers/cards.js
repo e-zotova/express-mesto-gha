@@ -1,6 +1,6 @@
 const Card = require('../models/card');
-const handleErrors = require('../middlewares/handleErrors');
-const { ERROR_CODE_FORBIDDEN } = require('../utils/constants');
+const handleError = require('../middlewares/handleError');
+const { ERROR_CODE_FORBIDDEN, ERROR_CODE_CONFLICT } = require('../utils/constants');
 
 const {
   ERROR_CODE_INVALID_INPUT,
@@ -10,7 +10,7 @@ const {
 const getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.send(cards))
-    .catch((err) => handleErrors(err, req, res));
+    .catch((err) => handleError(err, req, res));
 };
 
 const createCard = (req, res) => {
@@ -27,7 +27,13 @@ const createCard = (req, res) => {
           .send({ message: 'Invalid input' });
         return;
       }
-      handleErrors(err, req, res);
+      if (err.code === 11000) {
+        res
+          .status(ERROR_CODE_CONFLICT)
+          .send({ message: 'Document already exists in database' });
+        return;
+      }
+      handleError(err, req, res);
     });
 };
 
@@ -58,7 +64,7 @@ const deleteCardById = (req, res) => {
           .send({ message: 'Card is not found' });
         return;
       }
-      handleErrors(err, req, res);
+      handleError(err, req, res);
     });
 };
 
@@ -85,7 +91,7 @@ const likeCard = (req, res) => {
           .send({ message: 'Card is not found' });
         return;
       }
-      handleErrors(err, req, res);
+      handleError(err, req, res);
     });
 };
 
@@ -112,7 +118,7 @@ const dislikeCard = (req, res) => {
           .send({ message: 'Card is not found' });
         return;
       }
-      handleErrors(err, req, res);
+      handleError(err, req, res);
     });
 };
 

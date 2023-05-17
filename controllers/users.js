@@ -2,11 +2,12 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
 const { getJwtToken } = require('../utils/jwt');
-const handleErrors = require('../middlewares/handleErrors');
+const handleError = require('../middlewares/handleError');
 
 const {
   ERROR_CODE_INVALID_INPUT,
   ERROR_CODE_UNAUTHORIZED,
+  ERROR_CODE_CONFLICT,
   ERROR_CODE_NOT_FOUND,
 } = require('../utils/constants');
 
@@ -38,7 +39,13 @@ const createUser = (req, res) => {
           .send({ message: 'Invalid input' });
         return;
       }
-      handleErrors(err, req, res);
+      if (err.code === 11000) {
+        res
+          .status(ERROR_CODE_CONFLICT)
+          .send({ message: 'Document already exists in database' });
+        return;
+      }
+      handleError(err, req, res);
     });
 };
 
@@ -60,7 +67,7 @@ const login = (req, res) => {
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch((err) => handleErrors(err, req, res));
+    .catch((err) => handleError(err, req, res));
 };
 
 const getCurrentUser = (req, res) => {
@@ -76,7 +83,7 @@ const getCurrentUser = (req, res) => {
           .send({ message: 'User is not found' });
         return;
       }
-      handleErrors(err, req, res);
+      handleError(err, req, res);
     });
 };
 
@@ -101,7 +108,7 @@ const getUserById = (req, res) => {
           .send({ message: 'User is not found' });
         return;
       }
-      handleErrors(err, req, res);
+      handleError(err, req, res);
     });
 };
 
@@ -135,7 +142,7 @@ const updateUserInfo = (req, res) => {
           .send({ message: 'Card is not found' });
         return;
       }
-      handleErrors(err, req, res);
+      handleError(err, req, res);
     });
 };
 
@@ -169,7 +176,7 @@ const updateUserAvatar = (req, res) => {
           .send({ message: 'Card is not found' });
         return;
       }
-      handleErrors(err, req, res);
+      handleError(err, req, res);
     });
 };
 
