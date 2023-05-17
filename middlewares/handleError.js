@@ -7,7 +7,7 @@ const handleError = (err, req, res, next) => {
     .status(err.status)
     .send({ message: err.status === 500 ? ERROR_MESSAGE_SERVER_ERROR : err.message });
 
-  next();
+  return next();
 };
 
 module.exports = handleError;

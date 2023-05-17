@@ -2,7 +2,6 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
 const { getJwtToken } = require('../utils/jwt');
-const handleError = require('../middlewares/handleError');
 
 const {
   ERROR_CODE_INVALID_INPUT,
@@ -11,7 +10,7 @@ const {
   ERROR_CODE_NOT_FOUND,
 } = require('../utils/constants');
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const {
     email, password, name, about, avatar,
   } = req.body;
@@ -34,18 +33,16 @@ const createUser = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res
+        return res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: 'Invalid input' });
-        return;
       }
       if (err.code === 11000) {
-        res
+        return res
           .status(ERROR_CODE_CONFLICT)
           .send({ message: 'Document already exists in database' });
-        return;
       }
-      handleError(err, req, res);
+      return next(err, req, res);
     });
 };
 
@@ -64,13 +61,13 @@ const login = (req, res) => {
     });
 };
 
-const getUsers = (req, res) => {
+const getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch((err) => handleError(err, req, res));
+    .catch((err) => next(err));
 };
 
-const getCurrentUser = (req, res) => {
+const getCurrentUser = (req, res, next) => {
   User.findById(req.user.id)
     .orFail()
     .then((user) => {
@@ -83,11 +80,11 @@ const getCurrentUser = (req, res) => {
           .send({ message: 'User is not found' });
         return;
       }
-      handleError(err, req, res);
+      next(err);
     });
 };
 
-const getUserById = (req, res) => {
+const getUserById = (req, res, next) => {
   const { userId } = req.params;
 
   User.findById(userId)
@@ -108,11 +105,11 @@ const getUserById = (req, res) => {
           .send({ message: 'User is not found' });
         return;
       }
-      handleError(err, req, res);
+      next(err);
     });
 };
 
-const updateUserInfo = (req, res) => {
+const updateUserInfo = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(
     req.user.id,
@@ -142,11 +139,11 @@ const updateUserInfo = (req, res) => {
           .send({ message: 'Card is not found' });
         return;
       }
-      handleError(err, req, res);
+      next(err);
     });
 };
 
-const updateUserAvatar = (req, res) => {
+const updateUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(
     req.user.id,
@@ -176,7 +173,7 @@ const updateUserAvatar = (req, res) => {
           .send({ message: 'Card is not found' });
         return;
       }
-      handleError(err, req, res);
+      next(err);
     });
 };
 

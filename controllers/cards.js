@@ -1,5 +1,4 @@
 const Card = require('../models/card');
-const handleError = require('../middlewares/handleError');
 const { ERROR_CODE_FORBIDDEN, ERROR_CODE_CONFLICT } = require('../utils/constants');
 
 const {
@@ -7,13 +6,13 @@ const {
   ERROR_CODE_NOT_FOUND,
 } = require('../utils/constants');
 
-const getCards = (req, res) => {
+const getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.send(cards))
-    .catch((err) => handleError(err, req, res));
+    .catch((err) => next(err));
 };
 
-const createCard = (req, res) => {
+const createCard = (req, res, next) => {
   req.body.owner = req.user.id;
 
   Card.create(req.body)
@@ -33,11 +32,11 @@ const createCard = (req, res) => {
           .send({ message: 'Document already exists in database' });
         return;
       }
-      handleError(err, req, res);
+      next(err);
     });
 };
 
-const deleteCardById = (req, res) => {
+const deleteCardById = (req, res, next) => {
   const { cardId } = req.params;
 
   Card.findById(cardId)
@@ -64,11 +63,11 @@ const deleteCardById = (req, res) => {
           .send({ message: 'Card is not found' });
         return;
       }
-      handleError(err, req, res);
+      next(err);
     });
 };
 
-const likeCard = (req, res) => {
+const likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user.id } },
@@ -91,11 +90,11 @@ const likeCard = (req, res) => {
           .send({ message: 'Card is not found' });
         return;
       }
-      handleError(err, req, res);
+      next(err);
     });
 };
 
-const dislikeCard = (req, res) => {
+const dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user.id } },
@@ -118,7 +117,7 @@ const dislikeCard = (req, res) => {
           .send({ message: 'Card is not found' });
         return;
       }
-      handleError(err, req, res);
+      next(err);
     });
 };
 
