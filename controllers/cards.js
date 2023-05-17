@@ -1,5 +1,6 @@
 const Card = require('../models/card');
 const handleErrors = require('../middlewares/handleErrors');
+const { ERROR_CODE_UNAUTHORIZED } = require('../utils/constants');
 
 const {
   ERROR_CODE_INVALID_INPUT,
@@ -33,11 +34,17 @@ const createCard = (req, res) => {
 const deleteCardById = (req, res) => {
   const { cardId } = req.params;
 
-  Card.findByIdAndRemove(cardId)
+  Card.findById(cardId)
     .orFail()
     .then((card) => {
-      res.send(card);
+      if (card.owner.toString() !== req.user.id) {
+        res
+          .status(ERROR_CODE_UNAUTHORIZED)
+          .send({ message: 'Authorization is required' });
+      }
+      return card.deleteOne();
     })
+    .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
         res
