@@ -8,10 +8,9 @@ const { validateCreateUser, validateLoginUser } = require('../middlewares/celebr
 router.use('/signin', validateLoginUser, login);
 router.use('/signup', validateCreateUser, createUser);
 
-router.use(authMiddleware);
-router.use('/users', userRouter);
-router.use('/cards', cardRouter);
-router.use('/*', (req, res) => {
+router.use('/users', authMiddleware, userRouter);
+router.use('/cards', authMiddleware, cardRouter);
+router.use('/*', authMiddleware, (req, res) => {
   res.status(404).send({ message: 'Page is not found' });
 });
 
