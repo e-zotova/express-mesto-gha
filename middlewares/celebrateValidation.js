@@ -24,7 +24,7 @@ const validateLoginUser = celebrate(
 const validateGetUserById = celebrate(
   {
     body: Joi.object().keys({
-
+      userId: Joi.string().alphanum().length(24),
     }),
   },
 );
@@ -32,8 +32,8 @@ const validateGetUserById = celebrate(
 const validateUpdateUserInfo = celebrate(
   {
     body: Joi.object().keys({
-      name: Joi.string().required().min(2).max(30),
-      about: Joi.string().required().min(2).max(30),
+      name: Joi.string().min(2).max(30),
+      about: Joi.string().min(2).max(30),
     }),
   },
 );
@@ -47,10 +47,10 @@ const validateCreateCard = celebrate(
   },
 );
 
-const validateDeleteCardById = celebrate(
+const validateCardById = celebrate(
   {
     body: Joi.object().keys({
-
+      cardId: Joi.string().alphanum().length(24),
     }),
   },
 );
@@ -61,5 +61,5 @@ module.exports = {
   validateGetUserById,
   validateUpdateUserInfo,
   validateCreateCard,
-  validateDeleteCardById,
+  validateCardById,
 };
