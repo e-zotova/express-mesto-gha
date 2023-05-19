@@ -24,7 +24,7 @@ const validateLoginUser = celebrate(
 const validateUserById = celebrate(
   {
     body: Joi.object().keys({
-      id: Joi.string().alphanum().hex().length(24),
+      userId: Joi.string().hex().length(24).required(),
     }),
   },
 );
@@ -56,7 +56,7 @@ const validateCreateCard = celebrate(
 const validateCardById = celebrate(
   {
     body: Joi.object().keys({
-      cardId: Joi.string().hex().length(24).required(),
+      cardId: Joi.string().hex().length(24),
     }),
   },
 );
