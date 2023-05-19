@@ -22,9 +22,6 @@ const createCard = (req, res, next) => {
       if (err.name === 'ValidationError') {
         return next(new BadRequestError('Invalid data when creating a card'));
       }
-      if (err.code === 11000) {
-        return next(new ConflictError('Card already exists'));
-      }
       return next(err);
     });
 };
@@ -36,7 +33,7 @@ const deleteCardById = (req, res, next) => {
     .orFail()
     .then((card) => {
       if (card.owner.toString() !== req.user.id) {
-        return next(new ForbiddenError('Forbidden'));
+        return next(new ForbiddenError('It is not allowed to delete other user\'s card'));
       }
       return card;
     })
