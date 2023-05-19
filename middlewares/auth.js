@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken');
+const { verifyJwtToken } = require('../utils/jwt');
 const UnauthorizedError = require('../errors/unauthorized-error');
 
 const extractBearerToken = (header) => header.replace('Bearer ', '');
@@ -13,7 +13,7 @@ const auth = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, 'someveryveryverysecretkey');
+    payload = verifyJwtToken(token);
   } catch (err) {
     return next(new UnauthorizedError('Authorization is required'));
   }

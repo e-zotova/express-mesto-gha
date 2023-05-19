@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const { getJwtToken } = require('../utils/jwt');
 
 const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-error');
@@ -44,7 +44,7 @@ const login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ id: user.id }, 'someveryveryverysecretkey', { expiresIn: '7d' });
+      const token = getJwtToken(user.id);
       res.send({ token });
     })
     .catch(() => next(new UnauthorizedError('Authorization is required')));
