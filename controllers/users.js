@@ -5,8 +5,8 @@ const { getJwtToken } = require('../utils/jwt');
 
 const NotFoundError = require('../errors/not-found-error');
 const ConflictError = require('../errors/conflict-error');
-const ForbiddenError = require('../errors/forbidden-error');
 const BadRequestError = require('../errors/bad-request-error');
+const UnauthorizedError = require('../errors/unauthorized-error');
 
 const createUser = (req, res, next) => {
   const {
@@ -48,7 +48,7 @@ const login = (req, res) => {
       const token = getJwtToken(user._id);
       res.send({ token });
     })
-    .catch(() => new ForbiddenError('Authorization is required'));
+    .catch(() => new UnauthorizedError('Authorization is required'));
 };
 
 const getUsers = (req, res, next) => {
