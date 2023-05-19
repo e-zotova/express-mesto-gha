@@ -1,12 +1,7 @@
 const { verifyJwtToken } = require('../utils/jwt');
+const UnauthorizedError = require('../errors/unauthorized-error');
 
-const { ERROR_CODE_UNAUTHORIZED } = require('../utils/constants');
-
-const handleAuthError = (res) => {
-  res
-    .status(ERROR_CODE_UNAUTHORIZED)
-    .send({ message: 'Authorization is required' });
-};
+const handleAuthError = () => new UnauthorizedError('Authorization is required');
 
 const extractBearerToken = (header) => header.replace('Bearer ', '');
 
