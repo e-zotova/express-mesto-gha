@@ -95,7 +95,7 @@ const getUserById = (req, res, next) => {
       if (err.name === 'CastError') {
         return res
           .status(ERROR_CODE_INVALID_INPUT)
-          .send({ message: 'Invalid id' });
+          .send({ message: 'Invalid data' });
       }
       if (err.name === 'DocumentNotFoundError') {
         return res
