@@ -13,9 +13,9 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(helmet());
 app.use(router);
-app.use(handleErrorMiddleware);
+app.use(helmet());
 app.use(errors());
+app.use(handleErrorMiddleware);
 
 app.listen(PORT, () => console.log('Server is started.'));
