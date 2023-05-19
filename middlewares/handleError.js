@@ -1,7 +1,7 @@
 const handleError = (err, req, res, next) => {
   res
-    .status(err.status)
-    .send({ message: err.status === 500 ? 'Server error' : err.message });
+    .status(err.statusCode)
+    .send({ message: err.statusCode === 500 ? 'Server error' : err.message });
 
   return next();
 };
