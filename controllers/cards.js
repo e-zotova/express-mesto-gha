@@ -36,7 +36,7 @@ const deleteCardById = (req, res, next) => {
     .orFail()
     .then((card) => {
       if (card.owner.toString() !== req.user.id) {
-        return next(new ForbiddenError('Authorization is required'));
+        return next(new ForbiddenError('Forbidden'));
       }
       return card.deleteOne();
     })
