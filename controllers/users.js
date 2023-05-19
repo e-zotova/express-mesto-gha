@@ -33,16 +33,16 @@ const createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res
+        return res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: 'Invalid input' });
       }
       if (err.code === 11000) {
-        res
+        return res
           .status(ERROR_CODE_CONFLICT)
           .send({ message: 'Document already exists in database' });
       }
-      next(err);
+      return next(err);
     });
 };
 
@@ -75,12 +75,11 @@ const getCurrentUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') {
-        res
+        return res
           .status(ERROR_CODE_NOT_FOUND)
           .send({ message: 'User is not found' });
-        return;
       }
-      next(err);
+      return next(err);
     });
 };
 
@@ -94,18 +93,16 @@ const getUserById = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res
+        return res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: 'Invalid id' });
-        return;
       }
       if (err.name === 'DocumentNotFoundError') {
-        res
+        return res
           .status(ERROR_CODE_NOT_FOUND)
           .send({ message: 'User is not found' });
-        return;
       }
-      next(err);
+      return next(err);
     });
 };
 
@@ -122,24 +119,21 @@ const updateUserInfo = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res
+        return res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: 'Invalid input' });
-        return;
       }
       if (err.name === 'CastError') {
-        res
+        return res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: 'Invalid id' });
-        return;
       }
       if (err.name === 'DocumentNotFoundError') {
-        res
+        return res
           .status(ERROR_CODE_NOT_FOUND)
           .send({ message: 'Card is not found' });
-        return;
       }
-      next(err);
+      return next(err);
     });
 };
 
@@ -156,24 +150,21 @@ const updateUserAvatar = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res
+        return res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: 'Invalid input' });
-        return;
       }
       if (err.name === 'CastError') {
-        res
+        return res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: 'Invalid id' });
-        return;
       }
       if (err.name === 'DocumentNotFoundError') {
-        res
+        return res
           .status(ERROR_CODE_NOT_FOUND)
           .send({ message: 'Card is not found' });
-        return;
       }
-      next(err);
+      return next(err);
     });
 };
 

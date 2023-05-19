@@ -9,7 +9,7 @@ const {
 const getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.send(cards))
-    .catch((err) => next(err));
+    .catch(next);
 };
 
 const createCard = (req, res, next) => {
@@ -21,18 +21,16 @@ const createCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res
+        return res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: 'Invalid input' });
-        return;
       }
       if (err.code === 11000) {
-        res
+        return res
           .status(ERROR_CODE_CONFLICT)
           .send({ message: 'Document already exists in database' });
-        return;
       }
-      next(err);
+      return next(err);
     });
 };
 
@@ -52,18 +50,16 @@ const deleteCardById = (req, res, next) => {
     .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res
+        return res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: 'Invalid id' });
-        return;
       }
       if (err.name === 'DocumentNotFoundError') {
-        res
+        return res
           .status(ERROR_CODE_NOT_FOUND)
           .send({ message: 'Card is not found' });
-        return;
       }
-      next(err);
+      return next(err);
     });
 };
 
@@ -79,18 +75,16 @@ const likeCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res
+        return res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: 'Invalid id' });
-        return;
       }
       if (err.name === 'DocumentNotFoundError') {
-        res
+        return res
           .status(ERROR_CODE_NOT_FOUND)
           .send({ message: 'Card is not found' });
-        return;
       }
-      next(err);
+      return next(err);
     });
 };
 
@@ -106,18 +100,16 @@ const dislikeCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res
+        return res
           .status(ERROR_CODE_INVALID_INPUT)
           .send({ message: 'Invalid id' });
-        return;
       }
       if (err.name === 'DocumentNotFoundError') {
-        res
+        return res
           .status(ERROR_CODE_NOT_FOUND)
           .send({ message: 'Card is not found' });
-        return;
       }
-      next(err);
+      return next(err);
     });
 };
 
