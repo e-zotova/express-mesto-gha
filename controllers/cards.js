@@ -1,10 +1,9 @@
 const Card = require('../models/card');
-const { ERROR_CODE_FORBIDDEN, ERROR_CODE_CONFLICT } = require('../utils/constants');
 
-const {
-  ERROR_CODE_INVALID_INPUT,
-  ERROR_CODE_NOT_FOUND,
-} = require('../utils/constants');
+const NotFoundError = require('../errors/not-found-error');
+const ConflictError = require('../errors/conflict-error');
+const ForbiddenError = require('../errors/forbidden-error');
+const BadRequestError = require('../errors/bad-request-error');
 
 const getCards = (req, res, next) => {
   Card.find({})
@@ -21,14 +20,10 @@ const createCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res
-          .status(ERROR_CODE_INVALID_INPUT)
-          .send({ message: 'Invalid input' });
+        return new BadRequestError('Invalid data when creating a card');
       }
       if (err.code === 11000) {
-        return res
-          .status(ERROR_CODE_CONFLICT)
-          .send({ message: 'Document already exists in database' });
+        return new ConflictError('Card already exists');
       }
       return next(err);
     });
@@ -41,23 +36,17 @@ const deleteCardById = (req, res, next) => {
     .orFail()
     .then((card) => {
       if (card.owner.toString() !== req.user.id) {
-        res
-          .status(ERROR_CODE_FORBIDDEN)
-          .send({ message: 'Authorization is required' });
+        return new ForbiddenError('Authorization is required');
       }
       return card.deleteOne();
     })
     .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res
-          .status(ERROR_CODE_INVALID_INPUT)
-          .send({ message: 'Invalid id' });
+        return new BadRequestError('Invalid card id');
       }
       if (err.name === 'DocumentNotFoundError') {
-        return res
-          .status(ERROR_CODE_NOT_FOUND)
-          .send({ message: 'Card is not found' });
+        return new NotFoundError('Card is not found');
       }
       return next(err);
     });
@@ -75,14 +64,10 @@ const likeCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res
-          .status(ERROR_CODE_INVALID_INPUT)
-          .send({ message: 'Invalid id' });
+        return new BadRequestError('Invalid card id');
       }
       if (err.name === 'DocumentNotFoundError') {
-        return res
-          .status(ERROR_CODE_NOT_FOUND)
-          .send({ message: 'Card is not found' });
+        return new NotFoundError('Card is not found');
       }
       return next(err);
     });
@@ -100,14 +85,10 @@ const dislikeCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res
-          .status(ERROR_CODE_INVALID_INPUT)
-          .send({ message: 'Invalid id' });
+        return new BadRequestError('Invalid card id');
       }
       if (err.name === 'DocumentNotFoundError') {
-        return res
-          .status(ERROR_CODE_NOT_FOUND)
-          .send({ message: 'Card is not found' });
+        return new NotFoundError('Card is not found');
       }
       return next(err);
     });

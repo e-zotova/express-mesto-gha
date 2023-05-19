@@ -3,12 +3,10 @@ const User = require('../models/user');
 
 const { getJwtToken } = require('../utils/jwt');
 
-const {
-  ERROR_CODE_INVALID_INPUT,
-  ERROR_CODE_UNAUTHORIZED,
-  ERROR_CODE_CONFLICT,
-  ERROR_CODE_NOT_FOUND,
-} = require('../utils/constants');
+const NotFoundError = require('../errors/not-found-error');
+const ConflictError = require('../errors/conflict-error');
+const ForbiddenError = require('../errors/forbidden-error');
+const BadRequestError = require('../errors/bad-request-error');
 
 const createUser = (req, res, next) => {
   const {
@@ -33,14 +31,10 @@ const createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res
-          .status(ERROR_CODE_INVALID_INPUT)
-          .send({ message: 'Invalid input' });
+        return new BadRequestError('Invalid data when creating a user');
       }
       if (err.code === 11000) {
-        return res
-          .status(ERROR_CODE_CONFLICT)
-          .send({ message: 'Document already exists in database' });
+        return new ConflictError('User already exists');
       }
       return next(err);
     });
@@ -54,11 +48,7 @@ const login = (req, res) => {
       const token = getJwtToken(user._id);
       res.send({ token });
     })
-    .catch((err) => {
-      res
-        .status(ERROR_CODE_UNAUTHORIZED)
-        .send({ message: err.message });
-    });
+    .catch(() => new ForbiddenError('Authorization is required'));
 };
 
 const getUsers = (req, res, next) => {
@@ -75,9 +65,7 @@ const getCurrentUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') {
-        return res
-          .status(ERROR_CODE_NOT_FOUND)
-          .send({ message: 'User is not found' });
+        return new NotFoundError('User is not found');
       }
       return next(err);
     });
@@ -93,14 +81,10 @@ const getUserById = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res
-          .status(ERROR_CODE_INVALID_INPUT)
-          .send({ message: 'Invalid data' });
+        return new BadRequestError('Invalid user id');
       }
       if (err.name === 'DocumentNotFoundError') {
-        return res
-          .status(ERROR_CODE_NOT_FOUND)
-          .send({ message: 'User is not found' });
+        return new NotFoundError('User is not found');
       }
       return next(err);
     });
@@ -118,20 +102,11 @@ const updateUserInfo = (req, res, next) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return res
-          .status(ERROR_CODE_INVALID_INPUT)
-          .send({ message: 'Invalid input' });
-      }
-      if (err.name === 'CastError') {
-        return res
-          .status(ERROR_CODE_INVALID_INPUT)
-          .send({ message: 'Invalid id' });
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        return new BadRequestError('Invalid user id');
       }
       if (err.name === 'DocumentNotFoundError') {
-        return res
-          .status(ERROR_CODE_NOT_FOUND)
-          .send({ message: 'Card is not found' });
+        return new NotFoundError('User is not found');
       }
       return next(err);
     });
@@ -149,20 +124,11 @@ const updateUserAvatar = (req, res, next) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return res
-          .status(ERROR_CODE_INVALID_INPUT)
-          .send({ message: 'Invalid input' });
-      }
-      if (err.name === 'CastError') {
-        return res
-          .status(ERROR_CODE_INVALID_INPUT)
-          .send({ message: 'Invalid id' });
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        return new BadRequestError('Invalid user id');
       }
       if (err.name === 'DocumentNotFoundError') {
-        return res
-          .status(ERROR_CODE_NOT_FOUND)
-          .send({ message: 'Card is not found' });
+        return new NotFoundError('User is not found');
       }
       return next(err);
     });
