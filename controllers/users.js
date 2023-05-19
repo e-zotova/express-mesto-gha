@@ -31,16 +31,16 @@ const createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return new BadRequestError('Invalid data when creating a user');
+        return next(new BadRequestError('Invalid data when creating a user'));
       }
       if (err.code === 11000) {
-        return new ConflictError('User already exists');
+        return next(new ConflictError('User already exists'));
       }
       return next(err);
     });
 };
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
@@ -48,13 +48,13 @@ const login = (req, res) => {
       const token = getJwtToken(user._id);
       res.send({ token });
     })
-    .catch(() => new UnauthorizedError('Authorization is required'));
+    .catch(() => next(new UnauthorizedError('Authorization is required')));
 };
 
 const getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch(next);
+    .catch((err) => next(err));
 };
 
 const getCurrentUser = (req, res, next) => {
@@ -65,7 +65,7 @@ const getCurrentUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') {
-        return new NotFoundError('User is not found');
+        return next(new NotFoundError('User is not found'));
       }
       return next(err);
     });
@@ -81,10 +81,10 @@ const getUserById = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return new BadRequestError('Invalid user id');
+        return next(new BadRequestError('Invalid user id'));
       }
       if (err.name === 'DocumentNotFoundError') {
-        return new NotFoundError('User is not found');
+        return next(new NotFoundError('User is not found'));
       }
       return next(err);
     });
@@ -103,10 +103,10 @@ const updateUserInfo = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        return new BadRequestError('Invalid user id');
+        return next(new BadRequestError('Invalid user id'));
       }
       if (err.name === 'DocumentNotFoundError') {
-        return new NotFoundError('User is not found');
+        return next(new NotFoundError('User is not found'));
       }
       return next(err);
     });
@@ -125,10 +125,10 @@ const updateUserAvatar = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        return new BadRequestError('Invalid user id');
+        return next(new BadRequestError('Invalid user id'));
       }
       if (err.name === 'DocumentNotFoundError') {
-        return new NotFoundError('User is not found');
+        return next(new NotFoundError('User is not found'));
       }
       return next(err);
     });

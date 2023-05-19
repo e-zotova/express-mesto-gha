@@ -20,10 +20,10 @@ const createCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return new BadRequestError('Invalid data when creating a card');
+        return next(new BadRequestError('Invalid data when creating a card'));
       }
       if (err.code === 11000) {
-        return new ConflictError('Card already exists');
+        return next(new ConflictError('Card already exists'));
       }
       return next(err);
     });
@@ -36,17 +36,17 @@ const deleteCardById = (req, res, next) => {
     .orFail()
     .then((card) => {
       if (card.owner.toString() !== req.user.id) {
-        return new ForbiddenError('Authorization is required');
+        return next(new ForbiddenError('Authorization is required'));
       }
       return card.deleteOne();
     })
     .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
-        return new BadRequestError('Invalid card id');
+        return next(new BadRequestError('Invalid card id'));
       }
       if (err.name === 'DocumentNotFoundError') {
-        return new NotFoundError('Card is not found');
+        return next(new NotFoundError('Card is not found'));
       }
       return next(err);
     });
@@ -64,10 +64,10 @@ const likeCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return new BadRequestError('Invalid card id');
+        return next(new BadRequestError('Invalid card id'));
       }
       if (err.name === 'DocumentNotFoundError') {
-        return new NotFoundError('Card is not found');
+        return next(new NotFoundError('Card is not found'));
       }
       return next(err);
     });
@@ -85,10 +85,10 @@ const dislikeCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return new BadRequestError('Invalid card id');
+        return next(new BadRequestError('Invalid card id'));
       }
       if (err.name === 'DocumentNotFoundError') {
-        return new NotFoundError('Card is not found');
+        return next(new NotFoundError('Card is not found'));
       }
       return next(err);
     });
