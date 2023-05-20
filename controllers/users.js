@@ -5,7 +5,6 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-error');
 const ConflictError = require('../errors/conflict-error');
 const BadRequestError = require('../errors/bad-request-error');
-const UnauthorizedError = require('../errors/unauthorized-error');
 
 const createUser = (req, res, next) => {
   const {
@@ -47,13 +46,13 @@ const login = (req, res, next) => {
       const token = getJwtToken(user.id);
       res.send({ token });
     })
-    .catch(() => next(new UnauthorizedError('Authorization is required')));
+    .catch(next);
 };
 
 const getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch((err) => next(err));
+    .catch(next);
 };
 
 const getCurrentUser = (req, res, next) => {

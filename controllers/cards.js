@@ -28,16 +28,14 @@ const createCard = (req, res, next) => {
 const deleteCardById = (req, res, next) => {
   const { cardId } = req.params;
 
-  Card.findById(cardId)
+  Card.findByIdAndRemove(cardId)
     .orFail()
     .then((card) => {
       if (card.owner.toString() !== req.user.id) {
-        return next(new ForbiddenError('It is not allowed to delete other user\'s card'));
+        throw next(new ForbiddenError('It is not allowed to delete other user\'s card'));
       }
-      return card;
+      res.status(200).send(card);
     })
-    .then((card) => Card.deleteOne(card))
-    .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
         return next(new BadRequestError('Invalid card id'));
@@ -45,7 +43,7 @@ const deleteCardById = (req, res, next) => {
       if (err.name === 'DocumentNotFoundError') {
         return next(new NotFoundError('Card is not found'));
       }
-      return next(err);
+      return next();
     });
 };
 
