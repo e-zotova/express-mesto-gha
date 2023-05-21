@@ -43,7 +43,7 @@ const deleteCardById = (req, res, next) => {
       if (err.name === 'DocumentNotFoundError') {
         return next(new NotFoundError('Card is not found'));
       }
-      return next();
+      return next(err);
     });
 };
 
